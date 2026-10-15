@@ -2,9 +2,9 @@ import { useState } from "react";
 import { View, Text, StyleSheet, FlatList, TextInput } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 
-import  ProductCard  from '../components/ProductCard';
-import { COLORS } from '../constants/colors';
-import { products } from '../data/products';
+import  ProductCard  from '../../components/ProductCard'
+import { COLORS } from '../../constants/colors';
+import { products } from '../../data/products';
 
 
 export default function HomeScreen() {
