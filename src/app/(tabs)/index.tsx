@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, FlatList, TextInput } from "react-native";
+import { router } from 'expo-router';
+import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 
 import  ProductCard  from '../../components/ProductCard'
@@ -40,6 +41,14 @@ export default function HomeScreen() {
       style={styles.searchInput}
     />
   </View>
+
+  <TouchableOpacity 
+  onPress={() => router.push('/login')} 
+  style={styles.loginButton}
+  >
+
+    <Text style={styles.loginButtonText}>Testar Login</Text>
+  </TouchableOpacity>
 
       <FlatList 
         data={filteredProducts}
@@ -129,5 +138,19 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingLeft: 10,
     fontSize: 16,
+  },
+
+  loginButton: {
+    backgroundColor: COLORS.text,
+    borderRadius: 16,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+
+  loginButtonText: {
+    color: COLORS.background,
+    fontWeight: '800',
+    fontSize: 15,
   },
  });
