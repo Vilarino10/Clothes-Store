@@ -1,11 +1,62 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 
 import { COLORS } from '@/constants/colors';
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleLogin = async () => {
+        setError('');
+
+        if (!email) {
+            setError('Digite Seu Email');
+            return;
+        }
+
+        if (!email.includes('@')) {
+            setError('Digite Um Email Válido');
+            return;
+        }
+
+        if (!password) {
+            setError('Digite Sua Senha');
+            return;
+        }
+
+        if (password.length < 6) {
+            setError('A Senha Deve Conter Pelo Menos 6 Caracteres');
+            return;
+        }
+
+        const storedUser = await AsyncStorage.getItem(
+            'gotham_store:user'
+        );
+
+        if (!storedUser) {
+            setError('Nenhum Usuario Cadastrado')
+            return;
+        }
+
+        const user = JSON.parse(storedUser);
+
+
+        if (user.email !== email || user.password !== password) {
+            setError('Email ou Senha Incorretos')
+            return;
+        }
+
+        await AsyncStorage.setItem(
+            '@gotham_store:user_logged',
+            'true'
+        );
+
+        router.replace('/');
+    };
 
     return ( 
         <View style={styles.container}>
@@ -37,11 +88,17 @@ export default function LoginScreen() {
                     secureTextEntry
                 />
 
-            <TouchableOpacity style={styles.button}>
+                {error && (
+                    <Text style={styles.errorText}>
+                        {error}
+                    </Text>
+                )}
+
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>ENTRAR</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/register')}>
                 <Text style={styles.registerText}>
                     Criar uma conta
                 </Text>
@@ -108,5 +165,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 14,
         marginTop: 8,
+    },
+
+    errorText: {
+        color: COLORS.error,
+        fontSize: 14,
+        marginTop: -8,
     },
 });

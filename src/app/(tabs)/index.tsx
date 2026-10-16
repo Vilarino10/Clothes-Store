@@ -2,6 +2,9 @@ import { useState } from "react";
 import { router } from 'expo-router';
 import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import  ProductCard  from '../../components/ProductCard'
 import { COLORS } from '../../constants/colors';
@@ -9,6 +12,12 @@ import { products } from '../../data/products';
 
 
 export default function HomeScreen() {
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('@gotham_store:user_logged');
+
+    router.replace('/login');
+  }
+  
 
   const [search, setSearch] = useState(''); 
 
@@ -20,10 +29,10 @@ export default function HomeScreen() {
   
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       
     <View style={styles.header}>
-      <Text style={styles.greeting}>Welcome Back, Wayne 🦇</Text>
+      <Text style={styles.greeting}>Welcome Back 🦇</Text>
       <Text style={styles.title}>Gotham Store</Text>
     </View>
 
@@ -42,14 +51,6 @@ export default function HomeScreen() {
     />
   </View>
 
-  <TouchableOpacity 
-  onPress={() => router.push('/login')} 
-  style={styles.loginButton}
-  >
-
-    <Text style={styles.loginButtonText}>Testar Login</Text>
-  </TouchableOpacity>
-
       <FlatList 
         data={filteredProducts}
         renderItem={({ item }) => (
@@ -57,16 +58,27 @@ export default function HomeScreen() {
         )}     
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ 
-          paddingBottom: 30,
-        }}
-      />
-    
+        style={styles.productList}
+        contentContainerStyle={styles.productListContent}
+        ListFooterComponent={
+          <View style={styles.footer}>
+            <Text style={styles.subtitle}>
+              Welcome to the Cave 🦇
+            </Text>
 
-      <Text style={styles.subtitle}>
-        Welcome to the Cave 🦇
-      </Text>
-    </View>
+            <TouchableOpacity 
+            onPress={handleLogout} 
+            style={styles.logoutButton}
+            >
+
+              <Text style={styles.logoutButtonText}>
+                  Sair da Conta
+              </Text>  
+            </TouchableOpacity>
+          </View>
+        }
+      />
+    </SafeAreaView>
   );
 }
 
@@ -93,6 +105,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     color: '#555',
+    marginBottom: 20,
   },
   
   product: {
@@ -139,18 +152,32 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 16,
   },
-
-  loginButton: {
-    backgroundColor: COLORS.text,
+  
+  logoutButton: {
+    borderWidth: 1,
+    borderColor: COLORS.border,
     borderRadius: 16,
     paddingVertical: 14,
     alignItems: 'center',
     marginBottom: 20,
   },
 
-  loginButtonText: {
-    color: COLORS.background,
-    fontWeight: '800',
+  logoutButtonText: {
+    color: COLORS.text,
     fontSize: 15,
+    fontWeight: '700',
   },
+
+  productList: {
+    flex: 1,
+  },
+
+  productListContent: {
+    paddingBottom: 30,
+  },
+
+  footer: {
+    paddingTop: 10,
+    paddingBottom: 20,
+  }
  });

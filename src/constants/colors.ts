@@ -11,4 +11,6 @@ export const COLORS = {
 
     border: '#3F3F46',
     price: '#E4E4E7',
+
+    error: '#EF4444',
 };
