@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 import { COLORS } from '../constants/colors';
 import { Product } from '../types/product';
 
@@ -9,7 +10,17 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
     return (
-        <View style={styles.card}>
+        <TouchableOpacity 
+        style={styles.card} 
+        onPress={() => router.push({
+            pathname: '/products/[id]',
+            params: {
+                id: product.id,
+            },
+        })
+    }
+ >
+    
             <View>
                 <Text style={styles.placeholderEmoji}>🧥</Text>
             </View>
@@ -21,7 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <Text style={styles.price}>
                 R$ {product.price.toFixed(2)}
             </Text>
-        </View>
+        </TouchableOpacity>
     );
 }
 

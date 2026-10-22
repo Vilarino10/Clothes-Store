@@ -6,6 +6,7 @@ import { useColorScheme } from 'react-native';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
+import { CartProvider } from '@/context/CartContext';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 
@@ -41,11 +42,10 @@ export default function RootLayout() {
   
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <CartProvider>
       <AnimatedSplashOverlay />
-      <Stack screenOptions={{
-        headerShown: false
-      }}
-      />
+      <Stack screenOptions={{headerShown: false}}/>
+      </CartProvider>
     </ThemeProvider>
   );
 }
