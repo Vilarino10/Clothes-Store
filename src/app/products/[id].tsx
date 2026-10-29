@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { products } from '@/data/products';
 import { COLORS } from '@/constants/colors';
 
@@ -32,7 +32,8 @@ export default function ProductDetails() {
 
             <TouchableOpacity style={styles.cartButton} onPress={() => {
                 if (product) {
-                    addToCart(product)
+                    addToCart(product);
+                    router.push('/cart');
                 }
             }}>
                 <Text style={styles.cartButtonText}>

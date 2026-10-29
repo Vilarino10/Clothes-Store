@@ -44,7 +44,6 @@ export default function LoginScreen() {
 
         const user = JSON.parse(storedUser);
 
-
         if (user.email !== email || user.password !== password) {
             setError('Email ou Senha Incorretos')
             return;

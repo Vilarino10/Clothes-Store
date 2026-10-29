@@ -32,7 +32,7 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.container}>
       
     <View style={styles.header}>
-      <Text style={styles.greeting}>Welcome Back 🦇</Text>
+      <Text style={styles.greeting}>Welcome Back </Text>
       <Text style={styles.title}>Kanemberg</Text>
     </View>
 
@@ -63,7 +63,7 @@ export default function HomeScreen() {
         ListFooterComponent={
           <View style={styles.footer}>
             <Text style={styles.subtitle}>
-              Welcome to the Cave 🦇
+              Welcome to the Kanemberg Store
             </Text>
 
             <TouchableOpacity 
