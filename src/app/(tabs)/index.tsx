@@ -33,7 +33,7 @@ export default function HomeScreen() {
       
     <View style={styles.header}>
       <Text style={styles.greeting}>Welcome Back 🦇</Text>
-      <Text style={styles.title}>Gotham Store</Text>
+      <Text style={styles.title}>Kanemberg</Text>
     </View>
 
   <View style={styles.searchContainer}>

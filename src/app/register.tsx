@@ -67,7 +67,7 @@ export default function registerScreen() {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>Gotham Store</Text>
+                <Text style={styles.title}>Kanemberg</Text>
 
                 <Text style={styles.subtitle}>
                     Crie Sua Conta

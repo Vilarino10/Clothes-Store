@@ -61,10 +61,10 @@ export default function LoginScreen() {
     return ( 
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>Gotham Store</Text>
+                <Text style={styles.title}>Kanemberg</Text>
 
                 <Text style={styles.subtitle}>
-                    Bem Vindo à Gotham
+                    Bem Vindo à Kanemberg
                 </Text>
             </View>
 
