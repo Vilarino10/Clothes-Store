@@ -1,5 +1,8 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Vibration } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+
 import { products } from '@/data/products';
 import { COLORS } from '@/constants/colors';
 
@@ -13,7 +16,24 @@ export default function ProductDetails() {
     const product = products.find((item) => item.id === id); 
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity 
+                    onPress={() => {router.back()}}
+                    style={styles.backButton}
+                    >
+                    
+                    <Ionicons 
+                    name='arrow-back'
+                    size={28}
+                    color={COLORS.text}
+                    style={{ transform: [{ translateY: -11 }] }}
+                    />
+
+                </TouchableOpacity>
+
+                <Text style={styles.backToProductsList}>Voltar ao Catálogo de Produtos</Text>
+            </View>
             <Image 
                 source={{ uri: product?.image }}
                 style={styles.image}
@@ -33,6 +53,7 @@ export default function ProductDetails() {
             <TouchableOpacity style={styles.cartButton} onPress={() => {
                 if (product) {
                     addToCart(product);
+                    Vibration.vibrate(100);
                     router.push('/cart');
                 }
             }}>
@@ -40,7 +61,7 @@ export default function ProductDetails() {
                     Adicionar ao Carrinho
                 </Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -90,5 +111,28 @@ const styles = StyleSheet.create({
         color: '#111111',
         fontSize: 16,
         fontWeight: '700',
+    },
+
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 24,
+        width: '100%',
+        paddingHorizontal: 20,
+    },
+
+    backButton: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 8,
+    },
+
+    backToProductsList: {
+        color: COLORS.text,
+        fontSize: 20,
+        fontWeight: '700',
+        marginBottom: 24,
     },
 });

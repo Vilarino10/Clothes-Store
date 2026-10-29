@@ -1,21 +1,45 @@
 import { useContext } from "react";
+import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, FlatList, StyleSheet } from  'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from  'react-native';
 
 import { COLORS } from "@/constants/colors";
 import { CartContext } from "@/context/CartContext";
 
 export default function CartScreen() {
-    const { cart } = useContext(CartContext)
+    const { cart, clearCart } = useContext(CartContext)
 
     const total = cart.reduce((sum, product) => {
         return sum + product.price;
     }, 0);
 
+    const handlePurchase = () => {
+        if (cart.length === 0) {
+            return;
+        }
+
+        clearCart();
+    }
+
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Meu Carrinho</Text>
+             <View style={styles.header}>
+                <TouchableOpacity 
+                        onPress={() => router.back()}
+                        style={styles.backButton}
+                    >
+                     <Ionicons 
+                        name="arrow-back"
+                        size={28}
+                        color={COLORS.text}
+                        style={{ transform: [{ translateY: -11 }] }}
+                     />
 
+                 </TouchableOpacity>
+                     <Text style={styles.title}>Meu Carrinho</Text>
+            </View>
+            
             {cart.length === 0 ? (
                 <Text style={styles.emptyText}>
                 Seu carrinho está vazio
@@ -37,6 +61,16 @@ export default function CartScreen() {
                         </View>
                     )} 
                 />
+
+                <TouchableOpacity 
+                style={styles.buyButton}
+                onPress={handlePurchase}
+                >
+                    <Text style={styles.buyButtonText}>
+                        Finalizar Compra
+                    </Text>
+
+                </TouchableOpacity>
 
                 <View style={styles.totalContainer}>
                     <Text style={styles.totalLabel}>Total</Text>
@@ -114,6 +148,34 @@ export default function CartScreen() {
     total: {
         color: COLORS.text,
         fontSize: 20,
+        fontWeight: '700',
+    },
+
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 24,
+    },
+
+    backButton: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 8,
+    },
+
+    buyButton: {
+        backgroundColor: COLORS.text,
+        padding: 16,
+        borderRadius: 12,
+        alignItems: 'center',
+        marginTop: 20,
+    },
+
+    buyButtonText: {
+        color: '#111',
+        fontSize: 16,
         fontWeight: '700',
     },
  });
