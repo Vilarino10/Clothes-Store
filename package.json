@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@testing-library/react-native": "^14.1.0",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.3.0",
     "jest": "~30.5.2",
     "jest-expo": "~58.0.14",
@@ -43,7 +44,14 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "moduleNameMapper": {
+      "^@react-native-async-storage/async-storage$": "<rootDir>/__mocks__/@react-native-async-storage.ts"
+    }
   },
   "private": true
 }
