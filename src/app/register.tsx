@@ -1,5 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Crypto from "expo-crypto";
+import { auth } from "@/services/firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useState } from "react";
 import {
   StyleSheet,
@@ -57,24 +57,31 @@ export default function RegisterScreen() {
       return;
     }
 
-    const salt = Crypto.randomUUID();
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password,
+      );
 
-    const passwordHash = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
-      `${salt}:${password}`,
-    );
+      await updateProfile(userCredential.user, {
+        displayName: name.trim(),
+      });
 
-    const user = {
-      name,
-      email,
-      password,
-      passwordHash,
-      salt,
-    };
+      router.replace("/");
+    } catch (error: any) {
+      console.log("Erro ao cadastrar:", error.code);
 
-    await AsyncStorage.setItem("gotham_store:user", JSON.stringify(user));
-
-    router.replace("/login");
+      if (error.code === "auth/email-already-in-use") {
+        setError("Esse email já está cadastrado");
+      } else if (error.code === "auth/invalid-email") {
+        setError("Digite um email válido");
+      } else if (error.code === "auth/weak-password") {
+        setError("A senha é muito fraca");
+      } else {
+        setError("Não foi possível criar sua conta. Tente novamente");
+      }
+    }
   };
 
   return (

@@ -1,79 +1,73 @@
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useState } from "react";
-import { router } from 'expo-router';
-import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { auth } from "@/services/firebase";
+import { signOut } from "firebase/auth";
 
-import  ProductCard  from '../../components/ProductCard'
-import { COLORS } from '../../constants/colors';
-import { products } from '../../data/products';
-
+import ProductCard from "../../components/ProductCard";
+import { COLORS } from "../../constants/colors";
+import { products } from "../../data/products";
 
 export default function HomeScreen() {
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('@gotham_store:user_logged');
+    try {
+      await signOut(auth);
+      router.replace("/login");
+    } catch (error: any) {
+      console.log("Erro ao sair da conta", error);
+    }
+  };
 
-    router.replace('/login');
-  }
-  
-
-  const [search, setSearch] = useState(''); 
+  const [search, setSearch] = useState("");
 
   const filteredProducts = products.filter((product) => {
-    return product.name
-    .toLowerCase()
-    .includes(search.toLowerCase());
+    return product.name.toLowerCase().includes(search.toLowerCase());
   });
-  
 
   return (
     <SafeAreaView style={styles.container}>
-      
-    <View style={styles.header}>
-      <Text style={styles.greeting}>Welcome Back </Text>
-      <Text style={styles.title}>Kanemberg</Text>
-    </View>
+      <View style={styles.header}>
+        <Text style={styles.greeting}>Welcome Back </Text>
+        <Text style={styles.title}>Kanemberg</Text>
+      </View>
 
-  <View style={styles.searchContainer}>
-    <Ionicons 
-      name='search'
-      size={20}
-      color='#71717A'
-    />
-    <TextInput
-      placeholder="Pesquisar Produtos"
-      placeholderTextColor={'#71717A'}
-      value={search}
-      onChangeText={setSearch}
-      style={styles.searchInput}
-    />
-  </View>
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={20} color="#71717A" />
+        <TextInput
+          placeholder="Pesquisar Produtos"
+          placeholderTextColor={"#71717A"}
+          value={search}
+          onChangeText={setSearch}
+          style={styles.searchInput}
+        />
+      </View>
 
-      <FlatList 
+      <FlatList
         data={filteredProducts}
-        renderItem={({ item }) => (
-          <ProductCard product={item} />
-        )}     
+        renderItem={({ item }) => <ProductCard product={item} />}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         style={styles.productList}
         contentContainerStyle={styles.productListContent}
         ListFooterComponent={
           <View style={styles.footer}>
-            <Text style={styles.subtitle}>
-              Welcome to the Kanemberg Store
-            </Text>
+            <Text style={styles.subtitle}>Welcome to the Kanemberg Store</Text>
 
-            <TouchableOpacity 
-            onPress={handleLogout} 
-            style={styles.logoutButton}
+            <TouchableOpacity
+              onPress={handleLogout}
+              style={styles.logoutButton}
             >
-
-              <Text style={styles.logoutButtonText}>
-                  Sair da Conta
-              </Text>  
+              <Text style={styles.logoutButtonText}>Sair da Conta</Text>
             </TouchableOpacity>
           </View>
         }
@@ -91,8 +85,8 @@ const styles = StyleSheet.create({
   },
 
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: COLORS.card,
     borderRadius: 18,
     paddingHorizontal: 16,
@@ -103,23 +97,23 @@ const styles = StyleSheet.create({
 
   subtitle: {
     fontSize: 18,
-    textAlign: 'center',
-    color: '#555',
+    textAlign: "center",
+    color: "#555",
     marginBottom: 20,
   },
-  
+
   product: {
     backgroundColor: COLORS.surface,
     borderRadius: 20,
     padding: 20,
     marginBottom: 16,
-    width: '100%',
+    width: "100%",
   },
 
   productName: {
     color: COLORS.text,
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 
   productPrice: {
@@ -142,7 +136,7 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     fontSize: 38,
     marginBottom: 2,
-    fontWeight: '800',
+    fontWeight: "800",
   },
 
   searchInput: {
@@ -152,20 +146,20 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 16,
   },
-  
+
   logoutButton: {
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 16,
     paddingVertical: 14,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
 
   logoutButtonText: {
     color: COLORS.text,
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: "700",
   },
 
   productList: {
@@ -179,5 +173,5 @@ const styles = StyleSheet.create({
   footer: {
     paddingTop: 10,
     paddingBottom: 20,
-  }
- });
+  },
+});

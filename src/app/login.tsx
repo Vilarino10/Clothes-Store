@@ -1,15 +1,15 @@
-import * as Crypto from "expo-crypto";
 import { router } from "expo-router";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { COLORS } from "@/constants/colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { auth } from "@/services/firebase";
 import { useState } from "react";
 
 export default function LoginScreen() {
@@ -40,28 +40,25 @@ export default function LoginScreen() {
       return;
     }
 
-    const storedUser = await AsyncStorage.getItem("gotham_store:user");
+    try {
+      await signInWithEmailAndPassword(auth, email.trim(), password);
 
-    if (!storedUser) {
-      setError("Nenhum Usuario Cadastrado");
-      return;
+      router.replace("/");
+    } catch (error: any) {
+      console.log("Erro ao fazer login:", error.code);
+
+      if (
+        error.code === "auth/invalid-credential" ||
+        error.code === "auth/user-not-found" ||
+        error.code === "auth/wrong-password"
+      ) {
+        setError("Email ou Senha Incorretos");
+      } else if (error.code === "auth/invalid-email") {
+        setError("Digite um email válido");
+      } else {
+        setError("Não foi possível entrar. Tente novamente");
+      }
     }
-
-    const user = JSON.parse(storedUser);
-
-    const passwordHash = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
-      `${user.salt}:${password}`,
-    );
-
-    if (user.email !== email || user.passwordHash !== passwordHash) {
-      setError("Email ou Senha Incorretos");
-      return;
-    }
-
-    await AsyncStorage.setItem("@gotham_store:user_logged", "true");
-
-    router.replace("/");
   };
 
   return (

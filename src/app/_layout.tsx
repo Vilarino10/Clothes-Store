@@ -9,7 +9,8 @@ import * as SplashScreen from "expo-splash-screen";
 import { useColorScheme } from "react-native";
 
 import { CartProvider } from "@/context/CartContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { auth } from "@/services/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 import { AnimatedSplashOverlay } from "@/components/animated-icon";
@@ -21,21 +22,17 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   useEffect(() => {
-    const checkSession = async () => {
-      const loggedUser = await AsyncStorage.getItem(
-        "@gotham_store:user_logged",
-      );
-
-      if (loggedUser === "true") {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
         router.replace("/");
       } else {
         router.replace("/login");
       }
 
       setCheckingSession(false);
-    };
+    });
 
-    checkSession();
+    return unsubscribe;
   }, []);
 
   if (checkingSession) {
