@@ -2,12 +2,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useContext } from "react";
 import {
-    Alert,
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -15,7 +15,7 @@ import { COLORS } from "@/constants/colors";
 import { CartContext } from "@/context/CartContext";
 
 export default function CartScreen() {
-  const { cart, clearCart } = useContext(CartContext);
+  const { cart, clearCart, removeFromCart } = useContext(CartContext);
 
   const total = cart.reduce((sum, product) => {
     return sum + product.price;
@@ -67,13 +67,21 @@ export default function CartScreen() {
           <FlatList
             data={cart}
             keyExtractor={(item, index) => `${item.id}- ${index}`}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <View style={styles.product}>
-                <Text style={styles.productName}>{item.name}</Text>
+                <View style={styles.productInfo}>
+                  <Text style={styles.productName}>{item.name}</Text>
+                  <Text style={styles.productPrice}>
+                    R$ {item.price.toFixed(2)}
+                  </Text>
+                </View>
 
-                <Text style={styles.productPrice}>
-                  R$ {item.price.toFixed(2)}
-                </Text>
+                <TouchableOpacity
+                  onPress={() => removeFromCart(index)}
+                  style={styles.removeButton}
+                >
+                  <Ionicons name="trash-outline" size={22} color="#EF4444" />
+                </TouchableOpacity>
               </View>
             )}
           />
@@ -118,6 +126,8 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
+    flexDirection: "row",
+    alignItems: "center",
   },
 
   productName: {
@@ -186,5 +196,14 @@ const styles = StyleSheet.create({
     color: "#111",
     fontSize: 16,
     fontWeight: "700",
+  },
+
+  productInfo: {
+    flex: 1,
+  },
+
+  removeButton: {
+    padding: 10,
+    marginLeft: 10,
   },
 });

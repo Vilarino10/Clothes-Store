@@ -52,6 +52,14 @@ export default function HomeScreen() {
         />
       </View>
 
+      <TouchableOpacity
+        style={styles.cartButton}
+        onPress={() => router.push("/cart")}
+      >
+        <Ionicons name="cart-outline" size={22} color="111" />
+        <Text style={styles.cartButtonText}>Meu Carrinho</Text>
+      </TouchableOpacity>
+
       <FlatList
         data={filteredProducts}
         renderItem={({ item }) => <ProductCard product={item} />}
@@ -173,5 +181,22 @@ const styles = StyleSheet.create({
   footer: {
     paddingTop: 10,
     paddingBottom: 20,
+  },
+
+  cartButton: {
+    backgroundColor: COLORS.text,
+    padding: 14,
+    borderRadius: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    marginBottom: 20,
+  },
+
+  cartButtonText: {
+    color: "#111",
+    fontSize: 16,
+    fontWeight: "700",
   },
 });
